@@ -65,33 +65,44 @@
                 $data_inizio = date('Y-m-d');
                 $data_fine = date('Y-m-d', strtotime('+30 days'));
 
-                $query_prestito = 'INSERT INTO Prestito(Utente, Copia, Bibliotecario, Data_Inizio, Data_Fine)
-                                VALUES(:utente, :copia, :bibliotecario, :data_inizio, :data_fine)';
+                try {
+                    $pdo->beginTransaction();
 
-                $stmt_prestito = $pdo->prepare($query_prestito);
-                $stmt_prestito->execute([
-                    'utente' => $id_utente,
-                    'copia' => $id_copia,
-                    'bibliotecario' => $id_bibliotecario,
-                    'data_inizio' => $data_inizio,
-                    'data_fine' => $data_fine
-                ]);
+                    $query_prestito = 'INSERT INTO Prestito(Utente, Copia, Bibliotecario, Data_Inizio, Data_Fine)
+                                    VALUES(:utente, :copia, :bibliotecario, :data_inizio, :data_fine)';
+                    $stmt_prestito = $pdo->prepare($query_prestito);
+                    $stmt_prestito->execute([
+                        'utente' => $id_utente,
+                        'copia' => $id_copia,
+                        'bibliotecario' => $id_bibliotecario,
+                        'data_inizio' => $data_inizio,
+                        'data_fine' => $data_fine
+                    ]);
 
-                $query_update_copia = "UPDATE Copia
-                                        SET Stato = 'In prestito'
-                                        WHERE ID_Copia = :id";
-                $stmt_update_copia = $pdo->prepare($query_update_copia);
-                $stmt_update_copia->execute(['id' => $id_copia]);
+                    $query_update_copia = "UPDATE Copia
+                                            SET Stato = 'In prestito'
+                                            WHERE ID_Copia = :id";
+                    $stmt_update_copia = $pdo->prepare($query_update_copia);
+                    $stmt_update_copia->execute(['id' => $id_copia]);
 
-                $query_update_prenotazione = "UPDATE Prenotazione
-                                                SET Stato = 'Soddisfatta'
-                                                WHERE ID_Prenotazione = :id";
-                $stmt_update_prenotazione = $pdo->prepare($query_update_prenotazione);
-                $stmt_update_prenotazione->execute(['id' => $id_prenotazione]);
+                    $query_update_prenotazione = "UPDATE Prenotazione
+                                                    SET Stato = 'Soddisfatta'
+                                                    WHERE ID_Prenotazione = :id";
+                    $stmt_update_prenotazione = $pdo->prepare($query_update_prenotazione);
+                    $stmt_update_prenotazione->execute(['id' => $id_prenotazione]);
 
-                $_SESSION['messaggio_flash'] = "Richiesta soddisfatta! È stato registrato automaticamente un nuovo prestito.";
-                header("Location: prenotazioni.php");
-                exit;
+                    $pdo->commit();
+
+                    $_SESSION['messaggio_flash'] = "Richiesta soddisfatta! È stato registrato automaticamente un nuovo prestito.";
+                    header("Location: prenotazioni.php");
+                    exit;
+
+                } catch (Exception $e) {
+                    if ($pdo->inTransaction()) {
+                        $pdo->rollBack();
+                    }
+                    throw $e;
+                }
             }
         }
         catch(Exception $e) {

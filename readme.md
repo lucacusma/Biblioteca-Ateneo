@@ -1,1 +1,1 @@
-![alt text](https://github.com/lucacusma/Biblioteca-Ateneo/tree/main/img/Biblioteca.jpg "Schema E-R")
+![Schema E-R](https://github.com/lucacusma/Biblioteca-Ateneo/tree/main/img/Biblioteca.jpg)

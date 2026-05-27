@@ -116,19 +116,19 @@
                 <tbody>
                     <?php while($row = $stmt->fetch()):?>
                         <tr>
-                            <td><?=htmlspecialchars($row['ISBN'])?></td>
-                            <td><?=htmlspecialchars($row['Titolo'])?></td>
-                            <td><?=htmlspecialchars($row['Autori'])?></td>
+                            <td><?=htmlspecialchars($row['ISBN'] ?? '')?></td>
+                            <td><?=htmlspecialchars($row['Titolo'] ?? '')?></td>
+                            <td><?=htmlspecialchars($row['Autori'] ?? 'Autore Sconosciuto')?></td>
                             <td>
-                                <?=htmlspecialchars($row['Nome_Editore'])?>
-                                <small>(<?=htmlspecialchars($row['Anno_Edizione'])?>)</small>
+                                <?=htmlspecialchars($row['Nome_Editore'] ?? '')?>
+                                <small>(<?=htmlspecialchars($row['Anno_Edizione'] ?? 'N/D')?>)</small>
                             </td>
-                            <td><?=htmlspecialchars($row['Lingua_Pubblicazione'])?></td>
-                            <td><?=htmlspecialchars($row['Pagine'])?></td>
+                            <td><?=htmlspecialchars($row['Lingua_Pubblicazione'] ?? '-')?></td>
+                            <td><?=htmlspecialchars($row['Pagine'] ?? '-')?></td>
                             <td>
-                                <strong><?=htmlspecialchars($row['Copie_Disponibili'])?></strong>
+                                <strong><?=htmlspecialchars($row['Copie_Disponibili'] ?? '0')?></strong>
                                 /
-                                <?=htmlspecialchars($row['Copie_Totali'])?>
+                                <?=htmlspecialchars($row['Copie_Totali'] ?? '0')?>
                             </td>
                             <td>
                                 <a href="dettaglio_libro.php?isbn=<?=htmlspecialchars($row['ISBN'])?>">Scheda Libro</a>

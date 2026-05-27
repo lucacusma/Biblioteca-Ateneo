@@ -21,9 +21,9 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $id_editore = $_POST['id_editore'] ?? null;
         $isbn = $_POST['isbn'];
-        $anno_originale = $_POST['anno_originale'];
-        $lingua_originale = $_POST['lingua_originale'];
-        $pagine = $_POST['pagine'];
+        $anno_originale = !empty($_POST['anno_originale']) ? $_POST['anno_originale'] : null;
+        $lingua_originale = !empty($_POST['lingua_originale']) ? ucfirst(strtolower(trim($_POST['lingua_originale']))) : null;
+        $pagine = !empty($_POST['pagine']) ? $_POST['pagine'] : null;
 
         $scelta_opera = $_POST['scelta_opera'] ?? null;
 
@@ -32,7 +32,7 @@
 
         $titolo_nuovo = $_POST['titolo_nuovo'] ?? '';
         $anno_edizione = !empty($_POST['anno_edizione']) ? $_POST['anno_edizione'] : null;
-        $lingua_edizione = !empty($_POST['lingua_edizione']) ? $_POST['lingua_edizione'] : null;
+        $lingua_edizione = !empty($_POST['lingua_edizione']) ? ucfirst(strtolower(trim($_POST['lingua_edizione']))) : null;
 
         if(!$id_editore){
             $messaggio = "Errore: devi selezionare un editore";
@@ -138,6 +138,13 @@
     $stmt_cat = $pdo->query("SELECT ID_Categoria, Nome, Macro_Categoria FROM Categoria ORDER BY Nome ASC");
     $lista_categorie = $stmt_cat->fetchAll();
 
+    //Suggerimento lingue
+    $stmt_lingue_ed = $pdo->query("SELECT DISTINCT Lingua_Pubblicazione FROM Edizione WHERE Lingua_Pubblicazione IS NOT NULL AND Lingua_Pubblicazione != '' ORDER BY Lingua_Pubblicazione ASC");
+    $lista_lingue_ed = $stmt_lingue_ed->fetchAll(PDO::FETCH_COLUMN);
+
+    $stmt_lingue_orig = $pdo->query("SELECT DISTINCT Lingua_Originale FROM Opera WHERE Lingua_Originale IS NOT NULL AND Lingua_Originale != '' ORDER BY Lingua_Originale ASC");
+    $lista_lingue_orig = $stmt_lingue_orig->fetchAll(PDO::FETCH_COLUMN);
+
     require 'include/header.php';
 ?>
 
@@ -158,7 +165,7 @@
     <h3>1. Seleziona Opera</h3>
     <label>Seleziona Opera esistente o creane una nuova</label> <br>
 
-    <select name="scelta_opera" id="select_opera" class="js-select-opera">
+    <select name="scelta_opera" id="select_opera" class="js-select-opera" required>
         <option></option>
         <option value="nuova">AGGIUNGI NUOVA OPERA</option>
         <?php foreach($lista_opere as $o):?>
@@ -176,8 +183,14 @@
         <label for="input_titolo">Titolo:</label>
         <input type="text" name="titolo_nuovo" id="input_titolo"><br><br>
 
-        <label for="lingua_originale">Lingua Originale:</label>
-        <input type="text" name="lingua_originale" id="lingua_originale"><br><br>
+        <label for="lingua_originale">Lingua Originale:</label><br>
+        <input type="text" name="lingua_originale" id="lingua_originale" list="suggerimenti_lingue_orig" autocomplete="off">
+        <datalist id="suggerimenti_lingue_orig">
+            <?php foreach($lista_lingue_orig as $lingua): ?>
+                <option value="<?= htmlspecialchars($lingua) ?>"></option>
+            <?php endforeach; ?>
+        </datalist>
+        <br><br>
 
         <label for="anno_originale">Anno Pubblicazione Originale:</label>
         <input type="number" name="anno_originale" id="anno_originale" max=<?=date('Y')?>><br><br>
@@ -224,7 +237,13 @@
     <input type="text" name="isbn" id="isbn" required minlength="10" maxlength="13"><br><br>
 
     <label for="lingua_edizione">Lingua Edizione:</label><br>
-    <input type="text" name="lingua_edizione" id="lingua_edizione"><br><br>
+    <input type="text" name="lingua_edizione" id="lingua_edizione" list="suggerimenti_lingue_ed" autocomplete="off">
+    <datalist id="suggerimenti_lingue_ed">
+        <?php foreach($lista_lingue_ed as $lingua): ?>
+            <option value="<?= htmlspecialchars($lingua) ?>"></option>
+        <?php endforeach; ?>
+    </datalist>
+    <br><br>
 
     <label for="anno_edizione">Anno Edizione:</label><br>
     <input type="number" name="anno_edizione" id="anno_edizione" min="1500" max="<?= date('Y') ?>"><br><br>

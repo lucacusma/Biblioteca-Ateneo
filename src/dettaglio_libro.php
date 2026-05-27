@@ -150,13 +150,13 @@
     <?php endif; ?>
     <br>
 
-    <strong>Editore:</strong> <?=htmlspecialchars($libro['Editore'])?> <br>
-    <strong>ISBN:</strong> <?=htmlspecialchars($libro['ISBN'])?> <br>
-    <strong>Pagine:</strong> <?=htmlspecialchars($libro['Pagine'])?> <br>
-    <strong>Lingua Originale:</strong> <?=htmlspecialchars($libro['Lingua_Originale'])?> <br>
-    <strong>Lingua Edizione:</strong> <?=htmlspecialchars($libro['Lingua_Pubblicazione'])?> <br>
-    <strong>Anno di pubblicazione originale:</strong> <?=htmlspecialchars($libro['Anno_Pubblicazione'])?> <br>
-    <strong>Anno Edizione:</strong> <?=htmlspecialchars($libro['Anno_Edizione'])?> <br>
+    <strong>Editore:</strong> <?=htmlspecialchars($libro['Editore'] ?? '-')?> <br>
+    <strong>ISBN:</strong> <?=htmlspecialchars($libro['ISBN'] ?? '-')?> <br>
+    <strong>Pagine:</strong> <?=htmlspecialchars($libro['Pagine'] ?? '-')?> <br>
+    <strong>Lingua Originale:</strong> <?=htmlspecialchars($libro['Lingua_Originale'] ?? '-')?> <br>
+    <strong>Lingua Edizione:</strong> <?=htmlspecialchars($libro['Lingua_Pubblicazione'] ?? '-')?> <br>
+    <strong>Anno di pubblicazione originale:</strong> <?=htmlspecialchars($libro['Anno_Pubblicazione'] ?? '-')?> <br>
+    <strong>Anno Edizione:</strong> <?=htmlspecialchars($libro['Anno_Edizione'] ?? '-')?> <br>
 </p>
 
 <hr>

@@ -21,19 +21,23 @@ $(document).ready(function(){
         var valore = $(this).val();
         var divNuova = $('#nuova_opera_div');
         var inputTitolo = $('#input_titolo');
+        var selectAutori = $('#select_autori');
 
         if(valore === 'nuova') {
             divNuova.slideDown();
             inputTitolo.prop('required', true);
+            selectAutori.prop('required', true);
         }
         else {
             divNuova.slideUp();
             inputTitolo.prop('required', false);
+            selectAutori.prop('required', false);
         }
     });
 
     if ($('#select_opera').val() === 'nuova') {
         $('#nuova_opera_div').show();
         $('#input_titolo').prop('required', true);
+        $('#select_autori').prop('required', true);
     }
 });

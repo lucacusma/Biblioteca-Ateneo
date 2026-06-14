@@ -20,9 +20,15 @@
     //Inserimento
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $nome = $_POST['nome'];
-
         $sede = !empty($_POST['sede']) ? $_POST['sede'] : NULL;
-        $sito = !empty($_POST['sito']) ? $_POST['sito'] : NULL;
+
+        // Ripulisce il sito web da eventuali spazi e rimuove http:// o https://
+        if (!empty($_POST['sito'])) {
+            $sito_pulito = trim($_POST['sito']);
+            $sito = preg_replace('#^https?://#i', '', $sito_pulito);
+        } else {
+            $sito = NULL;
+        }
 
         try {
             $query = "INSERT INTO Editore(Nome, Sede_Legale, Sito_Web)
